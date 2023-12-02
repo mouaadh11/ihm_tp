@@ -122,20 +122,20 @@ public class Task {
     // Initialize the list of TimeSessions with different types
     private void initList(int inFocusTimes) {
         for (int i = 1; i <= numberOfPomodoro; i++) {
-            System.out.println(i % inFocusTimes);
+//            System.out.println(i % inFocusTimes);
             if (i % inFocusTimes == 0) {
-                System.out.println("long + in F");
+//                System.out.println("long + in F");
                 // Add an InFocusSession
                 timeSessions.add(createInFocusSession(id, inFocusTime ));
                 // Add a LongBreakSession after every 'inFocusTimes' InFocusSessions
                 timeSessions.add(createLongBreakSession(id, longBreakTime ));
             }else if ( i  == numberOfPomodoro ) {
-                System.out.println("in F");
+//                System.out.println("in F");
 
                 // Add an InFocusSession
                 timeSessions.add(createInFocusSession(id, inFocusTime ));
             } else {
-                System.out.println("in F + short");
+//                System.out.println("in F + short");
                 // Add an InFocusSession
                 timeSessions.add(createInFocusSession(id, inFocusTime ));
                 // After each InFocusSession, add a ShortBreakSession
