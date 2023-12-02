@@ -24,15 +24,16 @@ public class Task {
     private Date reminder;
     private List<TimeSession> timeSessions;
     private int inFocusTimes;
-    //        jibhom ml database
-    int shortBreakTime = 5;
-    int longBreakTime = 25;
-    int inFocusTime = 30;
-    //        id_genrator
-    int id = 1;
+    //jibhom ml database
+    int shortBreakTime = 1;
+    int longBreakTime = 3;
+    int inFocusTime = 5;
+    // id-time-session_genrator
+    int id;
+    private String groupeName;
 
     // Constructor
-    public Task(int idTask, String name, Date deadline, Tags priority, int numberOfPomodoro,
+    public Task(int idTask, String name, String groupename ,Date deadline, Tags priority, int numberOfPomodoro,
                 String description, Status status, Date reminder, int inFocusTimes) {
         this.idTask = idTask;
         this.name = name;
@@ -42,6 +43,7 @@ public class Task {
         this.description = description;
         this.status = status;
         this.reminder = reminder;
+        this.groupeName = groupename;
         this.timeSessions = new ArrayList<>(); // Initialize the list
         this.inFocusTimes = inFocusTimes;
         initList(inFocusTimes);
@@ -50,18 +52,26 @@ public class Task {
     // Other methods...
     // Start the task with timers starting one after another
     public void startTask() {
-        for (TimeSession timeSession : timeSessions) {
-            timeSession.start();
-            // Wait for the current time session to complete before starting the next one
-            while (!timeSession.isTimeUp()) {
-                try {
-                    Thread.sleep(1000); // You can adjust the delay as needed (in milliseconds)
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        if (status == Status.TODO) {
+            status = Status.IN_PROGRESS;
+            for (TimeSession timeSession : timeSessions) {
+                timeSession.start();
+                // Wait for the current time session to complete before starting the next one
+                while (!timeSession.isTimeUp()) {
+                    System.out.println("time: "+ timeSession.getCurrent().toMinutes() + ":" + timeSession.getCurrent().toSecondsPart());
+                    try {
+                        Thread.sleep(1000); // You can adjust the delay as needed (in milliseconds)
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+            status = Status.DONE;
+        } else {
+            System.out.println("Task is already in progress or completed.");
         }
     }
+
 
     // Mark the task as complete
     public void markAsComplete() {
@@ -107,22 +117,33 @@ public class Task {
     private TimeSession createLongBreakSession(int id, int duration) {
         return new LongBreakS(id, duration);
     }
-    private TimeSession createShortBreakSession(int id, int duration) {
-        return new TimeSession(id, duration);
-    }
+    private TimeSession createShortBreakSession(int id, int duration) {return new ShortBreakS(id, duration);}
 
     // Initialize the list of TimeSessions with different types
     private void initList(int inFocusTimes) {
         for (int i = 1; i <= numberOfPomodoro; i++) {
+            System.out.println(i % inFocusTimes);
             if (i % inFocusTimes == 0) {
+                System.out.println("long + in F");
+                // Add an InFocusSession
+                timeSessions.add(createInFocusSession(id, inFocusTime ));
                 // Add a LongBreakSession after every 'inFocusTimes' InFocusSessions
                 timeSessions.add(createLongBreakSession(id, longBreakTime ));
-            } else {
+            }else if ( i  == numberOfPomodoro ) {
+                System.out.println("in F");
+
                 // Add an InFocusSession
-                timeSessions.add(createInFocusSession(id, longBreakTime ));
+                timeSessions.add(createInFocusSession(id, inFocusTime ));
+            } else {
+                System.out.println("in F + short");
+                // Add an InFocusSession
+                timeSessions.add(createInFocusSession(id, inFocusTime ));
                 // After each InFocusSession, add a ShortBreakSession
-                timeSessions.add(createLongBreakSession(id, longBreakTime ));
+                timeSessions.add(createShortBreakSession(id, shortBreakTime ));
             }
+        }
+        for (TimeSession timeSession : timeSessions) {
+            System.out.println(timeSession.getLabel());
         }
     }
 
@@ -163,5 +184,33 @@ public class Task {
         for (TimeSession timeSession : timeSessions) {
             timeSession.reset();
         }
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Integer getIdTask() {
+        return idTask;
+    }
+
+    public void setIdTask(int idTask) {
+        this.idTask = idTask;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getGroupeName() {
+        return groupeName;
     }
 }

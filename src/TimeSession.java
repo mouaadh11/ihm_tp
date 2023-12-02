@@ -4,7 +4,8 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
 
 
-public class TimerU {
+public class TimeSession {
+    private String label;
     private int id_TS;
     private Duration duration;
     private AtomicReference<Duration> current;
@@ -16,13 +17,14 @@ public class TimerU {
     private boolean timeUp;
 
     // Constructor
-    public TimerU(int id_TS, long durationInMinutes) {
+    public TimeSession(int id_TS, long durationInMinutes, String label) {
         this.id_TS = id_TS;
         this.duration = Duration.ofMinutes(durationInMinutes);
         this.current = new AtomicReference<>(Duration.ZERO);
         this.timer = new Timer();
         this.paused = true;
         this.timeUp = false;
+        this.label = label;
     }
 
 
@@ -90,7 +92,7 @@ public class TimerU {
                 if(!paused){
                 helper ++;
                 current.set(Duration.ofSeconds(helper));
-                System.out.println("Current Time: " + current.get().toMinutes() + ":" + current.get().toSecondsPart());
+//                System.out.println("Current Time: " + current.get().toMinutes() + ":" + current.get().toSecondsPart());
                     if (helper >= duration.toSeconds()) {
                         timeUp = true;
                         System.out.println("Time's up!");
@@ -104,6 +106,12 @@ public class TimerU {
         // Schedule the task to run every 1000 milliseconds (1 second)
         timer.scheduleAtFixedRate(task, 0, 1000);
     }
+
+    public String getLabel() {
+        return label;
+    }
+
+}
 
 
     // Main method for testing
@@ -126,4 +134,4 @@ public class TimerU {
 //        System.out.println("Time's up!");
 //
 //    }
-}
+//}

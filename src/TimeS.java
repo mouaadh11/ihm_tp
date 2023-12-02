@@ -1,7 +1,7 @@
 import java.time.Duration;
 import java.time.LocalTime;
 
-public class TimeSession {
+public class TimeS {
     private int id_TS;
     private Duration duration;
     private Duration current;
@@ -9,7 +9,7 @@ public class TimeSession {
     private LocalTime startTime;
 
     // Constructor
-    public TimeSession(int id_TS, long durationInMinutes) {
+    public TimeS(int id_TS, long durationInMinutes) {
         this.id_TS = id_TS;
         this.duration = Duration.ofMinutes(durationInMinutes);
         this.current = Duration.ZERO;
@@ -78,23 +78,23 @@ public class TimeSession {
     }
 
     // Main method for testing
-    public static void main(String[] args) {
-        // Example usage
-        TimeSession timeSession = new TimeSession(1, 1);
-
-        timeSession.start();
-
-        while (!timeSession.isTimeUp()) {
-            System.out.println("Current Time: " + timeSession.getCurrentTime().toMinutes() + " : " + timeSession.getCurrentTime().toSecondsPart());
-            // Simulate some activity
-            try {
-                Thread.sleep(2000); // Sleep for 1 second
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            timeSession.skip();
-        }
-
-        System.out.println("Time's up!");
-    }
+//    public static void main(String[] args) {
+//        // Example usage
+//        TimeSession timeSession = new TimeSession(1, 1);
+//
+//        timeSession.start();
+//
+//        while (!timeSession.isTimeUp()) {
+//            System.out.println("Current Time: " + timeSession.getCurrentTime().toMinutes() + " : " + timeSession.getCurrentTime().toSecondsPart());
+//            // Simulate some activity
+//            try {
+//                Thread.sleep(2000); // Sleep for 1 second
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            timeSession.skip();
+//        }
+//
+//        System.out.println("Time's up!");
+//    }
 }
