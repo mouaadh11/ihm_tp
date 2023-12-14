@@ -28,6 +28,10 @@ public class Task {
     int shortBreakTime = 1;
     int longBreakTime = 3;
     int inFocusTime = 5;
+    boolean autoStartBreak;
+    boolean disableBreaks;
+    boolean autoStartPomodoro;
+    boolean autoStart;
     // id-time-session_genrator
     int id;
     private String groupeName;
@@ -47,6 +51,9 @@ public class Task {
         this.timeSessions = new ArrayList<>(); // Initialize the list
         this.inFocusTimes = inFocusTimes;
         initList(inFocusTimes);
+        if (autoStartPomodoro || autoStart){
+            startTask();
+        }
     }
 
     // Other methods...
@@ -55,14 +62,21 @@ public class Task {
         if (status == Status.TODO) {
             status = Status.IN_PROGRESS;
             for (TimeSession timeSession : timeSessions) {
-                timeSession.start();
-                // Wait for the current time session to complete before starting the next one
-                while (!timeSession.isTimeUp()) {
-                    System.out.println("time: "+ timeSession.getCurrent().toMinutes() + ":" + timeSession.getCurrent().toSecondsPart());
-                    try {
-                        Thread.sleep(1000); // You can adjust the delay as needed (in milliseconds)
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                if ((timeSession.getLabel() == "Short break" ||timeSession.getLabel() == "Long Break") && !disableBreaks){
+                    if ((timeSession.getLabel() == "Short break" ||timeSession.getLabel() == "Long Break") && (!autoStartBreak || !autoStart )){
+                        // TODO: 14/12/2023 ask for starting
+                    }else {
+                        timeSession.start();
+                        // Wait for the current time session to complete before starting the next one
+                        while (!timeSession.isTimeUp()) {
+                            System.out.println("time: " + timeSession.getCurrent().toMinutes() + ":" + timeSession.getCurrent().toSecondsPart());
+                            try {
+                                Thread.sleep(1000); // You can adjust the delay as needed (in milliseconds)
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
                     }
                 }
             }
@@ -212,5 +226,33 @@ public class Task {
 
     public String getGroupeName() {
         return groupeName;
+    }
+
+    public void setInFocusTime(int inFocusTime) {
+        this.inFocusTime = inFocusTime;
+    }
+
+    public void setInFocusTimes(int inFocusTimes) {
+        this.inFocusTimes = inFocusTimes;
+    }
+
+    public void setLongBreakTime(int longBreakTime) {
+        this.longBreakTime = longBreakTime;
+    }
+
+    public void setShortBreakTime(int shortBreakTime) {
+        this.shortBreakTime = shortBreakTime;
+    }
+
+    public void setDisableBreaks(boolean disableBreaks) {
+        this.disableBreaks = disableBreaks;
+    }
+
+    public void setAutoStartBreak(boolean autoStartBreak) {
+        this.autoStartBreak = autoStartBreak;
+    }
+
+    public void setAutoStartPomodoro(boolean autoStartPomodoro) {
+        this.autoStartPomodoro = autoStartPomodoro;
     }
 }
